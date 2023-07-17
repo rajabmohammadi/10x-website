@@ -1,0 +1,7 @@
+type Categories {
+  Category_URL: String
+}
+
+type Query {
+  categories: [Categories]
+}

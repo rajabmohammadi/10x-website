@@ -1,0 +1,84 @@
+type Query {
+  users: [User]
+  viewProfile: User
+}
+type Mutation {
+  register(body: RegisterInput): AuthPayload
+  login(body: LoginInput): AuthPayload!
+  updateProfile(body: UpdateProfileInput): User!
+  changePassword(body: ChangePasswordInput): User!
+  forgotPassword(email: String): User
+}
+type User {
+  firstName: String!
+  lastName: String!
+  email: String!
+  phoneNumber: String!
+  password: String!
+  privateCustomer: Boolean
+  isCompany: Boolean
+  workshopName: String
+  salesTaxNumber: String
+  country: Country
+  invoiceEmail: String
+  requisitionNumber: String
+  newsLetter: Boolean
+}
+type AuthPayload {
+  token: String!
+  user: User!
+}
+input RegisterInput {
+  firstName: String!
+  lastName: String!
+  email: String!
+  phoneNumber: String!
+  password: String!
+  privateCustomer: Boolean
+  isCompany: Boolean
+  workshopName: String
+  salesTaxNumber: String
+  country: CountryInput
+  invoiceEmail: String
+  requisitionNumber: String
+  newsLetter: Boolean
+}
+input UpdateProfileInput {
+  firstName: String
+  lastName: String
+  email: String
+  phoneNumber: String
+  password: String
+  privateCustomer: Boolean
+  isCompany: Boolean
+  workshopName: String
+  salesTaxNumber: String
+  country: CountryInput
+  invoiceEmail: String
+  requisitionNumber: String
+  newsLetter: Boolean
+}
+input ChangePasswordInput {
+  oldPassword: String
+  newPassword: String
+}
+type Country {
+  name: String
+  zipCode: String
+  city: String
+  address: String
+}
+input CountryInput {
+  name: String
+  zipCode: String
+  city: String
+  address: String
+}
+input LoginInput {
+  email: String
+  password: String
+}
+enum ROLE {
+  ADMIN
+  USER
+}

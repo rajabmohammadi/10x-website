@@ -1,1 +1,1 @@
-# 10x-website
+# setup-apolloserver-prisma

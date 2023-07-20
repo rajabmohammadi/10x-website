@@ -6,7 +6,9 @@
   "scripts": {
     "compile": "tsc ",
     "start": "npm run compile && node ./dist/index.js",
-    "dev": "nodemon ./src/index.ts"
+    "dev": "nodemon ./src/index.ts",
+    "start:staging": "ts-node ./src/index.ts",
+    "pm2": "pm2 start ./src/index.ts --watch"
   },
   "keywords": [],
   "author": "",

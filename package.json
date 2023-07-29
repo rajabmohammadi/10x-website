@@ -32,7 +32,8 @@
     "node-fetch": "^2.6.9",
     "nodemailer": "^6.9.3",
     "nodemailer-mailgun-transport": "^2.1.5",
-    "nodemon": "^2.0.22"
+    "nodemon": "^2.0.22",
+    "stripe": "^12.16.0"
   },
   "devDependencies": {
     "@types/jsonwebtoken": "^9.0.2",

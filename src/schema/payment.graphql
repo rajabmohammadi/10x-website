@@ -1,0 +1,12 @@
+type Query {
+  payment: Payment
+}
+type Mutation {
+  payment: Payment
+  checkout: Payment
+  paypalCheckout: Payment
+}
+
+type Payment {
+  client_secret: String
+}

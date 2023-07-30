@@ -1,0 +1,16 @@
+type CarParts {
+  CustomLabel: String
+  Title: String
+  Hersteller: String
+  Modell: String
+  PicURL: String
+  Price: Int
+  Quantity: Int
+  generic_attributes: String
+  OEMR: String
+  OER: String
+}
+
+type Query {
+  carParts(skip: Int, take: Int): [CarParts]
+}

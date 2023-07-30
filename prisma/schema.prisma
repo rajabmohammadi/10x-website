@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["fullTextSearch", "fullTextIndex"]
 }
 
 datasource db {
@@ -24,4 +25,20 @@ model Users {
   invoiceEmail      String?
   requisitionNumber String?
   newsLetter        Boolean?  @default(false)
+}
+
+model used_carparts {
+  id                 Int     @id @unique @default(autoincrement())
+  CustomLabel        Int
+  Title              String
+  Hersteller         String
+  Modell             String
+  PicURL             String
+  Price              Decimal
+  Quantity           Int
+  generic_attributes String
+  OEMR               String
+  OER                String
+  createdAt         DateTime? @default(now())
+  updatedAt         DateTime? @updatedAt
 }

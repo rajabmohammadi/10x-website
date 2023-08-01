@@ -1,5 +1,6 @@
 type CarParts {
   CustomLabel: String
+  Category: String
   Title: String
   Hersteller: String
   Modell: String
@@ -13,4 +14,5 @@ type CarParts {
 
 type Query {
   carParts(skip: Int, take: Int): [CarParts]
+  searchCarParts(search: String): [CarParts]
 }

@@ -12,6 +12,21 @@ const resolvers = {
             }
 
         },
+        searchCarParts: async (_, args) => {
+            try {
+                console.log(args)
+                const parts = await prisma.used_carparts.findMany({
+                    where: {
+                        Category: { search: args.search },
+                    },
+                    take:args.take
+                });
+                return parts
+            } catch (err) {
+                console.log(err.message)
+            }
+
+        },
     },
     Mutation: {
         addHeadlights: async (_, args) => {

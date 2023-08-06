@@ -1,0 +1,6 @@
+type priceHistory {
+  product_id: Int
+  price: Int
+  effective_date: String
+  is_active: Boolean
+}

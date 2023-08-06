@@ -1,5 +1,5 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["fullTextSearch", "fullTextIndex"]
 }
 
@@ -11,7 +11,7 @@ datasource db {
 model Users {
   id                Int       @id @unique @default(autoincrement())
   createdAt         DateTime? @default(now())
-  updatedAt         DateTime? @updatedAt
+  updatedAt         DateTime?
   firstName         String
   lastName          String
   email             String    @unique
@@ -27,18 +27,18 @@ model Users {
   newsLetter        Boolean?  @default(false)
 }
 
-model used_carparts {
-  id                 Int     @id @unique @default(autoincrement())
-  CustomLabel        Int
-  Title              String
-  Hersteller         String
-  Modell             String
-  PicURL             String
-  Price              Decimal
-  Quantity           Int
-  generic_attributes String
-  OEMR               String
-  OER                String
-  createdAt         DateTime? @default(now())
-  updatedAt         DateTime? @updatedAt
+model carparts {
+  CustomLabel        Int     @id
+  Category           Int?
+  Title              String? @db.VarChar(80)
+  Hersteller         String? @db.VarChar(40)
+  Modell             String? @db.VarChar(80)
+  Price              Float?  @db.Float
+  PicURL             String? @db.VarChar(5000)
+  Quantity           Int?    @default(1) @db.TinyInt
+  OEMR               String? @db.VarChar(80)
+  OER                String? @db.VarChar(80)
+  generic_attributes String? @db.VarChar(10000)
+
+  @@fulltext([Title, Hersteller, Modell, PicURL, OEMR, OER], map: "tenx_website")
 }

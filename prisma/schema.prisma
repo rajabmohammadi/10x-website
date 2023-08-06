@@ -8,34 +8,13 @@ datasource db {
   url      = env("MYSQL_DB_URL")
 }
 
-model used_carparts {
-  id                 Int      @id @default(autoincrement())
-  CustomLabel        Int      @unique(map: "CustomLabel")
-  Category           String?  @db.VarChar(20)
-  Title              String?  @db.VarChar(80)
-  Hersteller         String?  @db.VarChar(40)
-  Modell             String?  @db.VarChar(80)
-  PicURL             String?  @db.VarChar(5000)
-  Price              Float?
-  Quantity           Int?
-  generic_attributes String?  @db.VarChar(10000)
-  OEMR               String?  @db.VarChar(80)
-  OER                String?  @db.VarChar(80)
-  createdAt          DateTime @default(now()) @db.Timestamp(0)
-  updatedAt          DateTime @default(now()) @db.Timestamp(0)
-
-  @@fulltext([Hersteller, Modell], map: "Hersteller")
-  @@fulltext([Title], map: "Title")
-  @@fulltext([Category], map: "Category")
-}
-
-model users {
-  id                Int       @id @unique(map: "Users_id_key") @default(autoincrement())
+model Users {
+  id                Int       @id @unique @default(autoincrement())
   createdAt         DateTime? @default(now())
   updatedAt         DateTime?
   firstName         String
   lastName          String
-  email             String    @unique(map: "Users_email_key")
+  email             String    @unique
   password          String
   phoneNumber       String
   privateCustomer   Boolean?  @default(false)
@@ -46,4 +25,20 @@ model users {
   invoiceEmail      String?
   requisitionNumber String?
   newsLetter        Boolean?  @default(false)
+}
+
+model carparts {
+  CustomLabel        Int     @id
+  Category           Int?
+  Title              String? @db.VarChar(80)
+  Hersteller         String? @db.VarChar(40)
+  Modell             String? @db.VarChar(80)
+  Price              Float?  @db.Float
+  PicURL             String? @db.VarChar(5000)
+  Quantity           Int?    @default(1) @db.TinyInt
+  OEMR               String? @db.VarChar(80)
+  OER                String? @db.VarChar(80)
+  generic_attributes String? @db.VarChar(10000)
+
+  @@fulltext([Title, Hersteller, Modell, PicURL, OEMR, OER], map: "tenx_website")
 }

@@ -1,3 +1,11 @@
+type Query {
+  searchCarParts(filter: SearchQuery): [CarParts]
+  categoryList: [Category]
+}
+type Mutation {
+  updatePriceHistory(percentage: Int): [CarParts]
+}
+scalar JSON
 type CarParts {
   CustomLabel: String
   Category: String
@@ -7,12 +15,25 @@ type CarParts {
   PicURL: String
   Price: Int
   Quantity: Int
-  generic_attributes: String
   OEMR: String
   OER: String
+  generic_attributes: JSON
+  price_history: priceHistory
+}
+type Category {
+  Category: Int
+  _count: JSON
 }
 
-type Query {
-  carParts(skip: Int, take: Int): [CarParts]
-  searchCarParts(search: String): [CarParts]
+input SearchQuery {
+  search: String
+  skip: Int!
+  take: Int!
+}
+type priceHistory {
+  product_id: Int
+  price: Int
+  effective_date: String
+  is_active: Boolean
+  product: CarParts
 }

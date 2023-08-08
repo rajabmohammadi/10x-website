@@ -38,7 +38,7 @@ model carparts {
   Quantity           Int?    @default(1) @db.TinyInt
   OEMR               String? @db.VarChar(80)
   OER                String? @db.VarChar(80)
-  generic_attributes String? @db.VarChar(10000)
+  generic_attributes Json?
 
-  @@fulltext([Title, Hersteller, Modell, PicURL, OEMR, OER], map: "tenx_website")
+  @@fulltext([Title, Hersteller, Modell, PicURL, OEMR, OER, generic_attributes], map: "tenx_website")
 }

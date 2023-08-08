@@ -1,8 +1,8 @@
 import prisma from "../config/database";
-import active_listing from "../models/headlights.model";
+import pagination from "../utils/pagination";
 const resolvers = {
     Query: {
-        // group by category
+        //get category list.
         categoryList: async () => {
             try {
                 const categories = await prisma.carparts.groupBy({
@@ -18,46 +18,89 @@ const resolvers = {
             }
 
         },
-        searchCarParts: async (_, { filter: args }) => {
+        searchOnCategory: async (_, args) => {
             try {
-                let skip = 0;
-                let take = 20;
-                if (args?.skip) skip = args.skip;
-                if (args?.take) take = args.take;
-                if (args?.search) {
-                    let regex = new RegExp(`${args.search}`, "gi")
-                    const parts = await prisma.carparts.findMany({
-                        where: {
-                            Title: { search: `${regex}` },
-                            Hersteller: { search: `${regex}` },
-                            Modell: { search: `${regex}` },
-                            PicURL: { search: `${regex}` },
-                            OEMR: { search: `${regex}` },
-                            OER: { search: `${regex}` },
-                        },
-                        take, skip
-                    });
-                    return parts;
-                } else {
-                    const parts = await prisma.carparts.findMany({ skip, take });
-                    return parts;
+                let take = args.limit;
+                let page = args.page;
+                let search = args?.search;
+                let skip = (args.page - 1) * take;
+                let where = {
+                    Title: { search: search },
+                    Hersteller: { search: search },
+                    Modell: { search: search },
+                    PicURL: { search: search },
+                    OEMR: { search: search },
+                    OER: { search: search }
+                }
+                const [docs, totalDocs] = await Promise.all([
+                    prisma.carparts.findMany({ where: { AND: [where, { Category: args.category }] }, skip, take }),
+                    prisma.carparts.count({ where: { AND: [where, { Category: args.category }] } }),
+                ]);
+                let pageInfo = await pagination(totalDocs, take, page)
+                return {
+                    docs,
+                    pageInfo
                 }
 
 
             } catch (err) {
                 console.log(err.message)
             }
-
         },
+        search: async (_, args) => {
+            try {
+                let take = args.limit;
+                let page = args.page;
+                let search = args?.search;
+                let skip = (args.page - 1) * take;
+                let where = {
+                    Title: { search: search },
+                    Hersteller: { search: search },
+                    Modell: { search: search },
+                    PicURL: { search: search },
+                    OEMR: { search: search },
+                    OER: { search: search },
+                }
+                const [docs, totalDocs] = await Promise.all([
+                    prisma.carparts.findMany({ where, skip, take }),
+                    prisma.carparts.count({ where }),
+                ]);
+                let pageInfo = await pagination(totalDocs, take, page)
+                return {
+                    docs,
+                    pageInfo
+                }
+
+            } catch (error) {
+                throw new Error(error.message);
+            }
+        },
+        getByCategory: async (_, args) => {
+            try {
+                let take = args.limit;
+                let page = args.page;
+                let skip = (args.page - 1) * take;
+                const [docs, totalDocs] = await Promise.all([
+                    prisma.carparts.findMany({
+                        where: { Category: args.category }, skip, take
+                    }),
+                    prisma.carparts.count({
+                        where: { Category: args.category }
+                    }),
+                ]);
+                console.log(totalDocs)
+                let pageInfo = await pagination(totalDocs, take, page)
+                return {
+                    docs,
+                    pageInfo
+                }
+            } catch (error) {
+                throw new Error(error.message);
+            }
+        }
     },
     Mutation: {
-        addHeadlights: async (_, args) => {
-            const headlights = new active_listing({
-                Title: args.title,
-                SKU: args.sku
-            });
-            return await headlights.save();
-        }
+
     }
 
 };

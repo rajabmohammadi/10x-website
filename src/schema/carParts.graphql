@@ -1,6 +1,13 @@
 type Query {
-  searchCarParts(filter: SearchQuery): [CarParts]
+  searchOnCategory(
+    page: Int!
+    limit: Int!
+    search: String!
+    Category: Int!
+  ): CarPartsConnection
   categoryList: [Category]
+  search(page: Int!, limit: Int!, search: String!): CarPartsConnection
+  getByCategory(category: Int!, page: Int!, limit: Int!): CarPartsConnection
 }
 type Mutation {
   updatePriceHistory(percentage: Int): [CarParts]
@@ -27,8 +34,13 @@ type Category {
 
 input SearchQuery {
   search: String
-  skip: Int!
+  page: Int!
   take: Int!
+}
+input findByCategory {
+  category: Int!
+  skip: Int
+  take: Int
 }
 type priceHistory {
   product_id: Int
@@ -36,4 +48,19 @@ type priceHistory {
   effective_date: String
   is_active: Boolean
   product: CarParts
+}
+type PageInfo {
+  totalDocs: Int!
+  limit: Int!
+  page: Int!
+  nextPage: JSON
+  prevPage: JSON
+  hasNextPage: Boolean!
+  hasPrevPage: Boolean!
+  totalPages: Int!
+  pagingCounter: Int!
+}
+type CarPartsConnection {
+  pageInfo: PageInfo!
+  docs: [CarParts!]!
 }

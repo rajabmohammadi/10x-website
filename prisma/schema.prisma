@@ -25,6 +25,7 @@ model Users {
   invoiceEmail      String?
   requisitionNumber String?
   newsLetter        Boolean?  @default(false)
+  orders            Order[]
 }
 
 model carparts {
@@ -39,6 +40,22 @@ model carparts {
   OEMR               String? @db.VarChar(80)
   OER                String? @db.VarChar(80)
   generic_attributes Json?
+  orders             Order[]
 
   @@fulltext([Title, Hersteller, Modell, PicURL, OEMR, OER, generic_attributes], map: "tenx_website")
+}
+
+model Order {
+  id          Int       @id @unique @default(autoincrement())
+  createdAt   DateTime? @default(now())
+  updatedAt   DateTime?
+  userId      Int
+  carpartId   Int
+  quantity    Int
+  totalAmount Float
+  user        Users     @relation(fields: [userId], references: [id])
+  carpart     carparts  @relation(fields: [carpartId], references: [CustomLabel])
+
+  @@index([userId], name: "userId")
+  @@index([carpartId], name: "carpartId")
 }

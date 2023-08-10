@@ -6,6 +6,7 @@ type Query {
     Category: Int!
   ): CarPartsConnection
   categoryList: [Category]
+  getSingleProduct(customLabel: Int!): CarParts
   search(page: Int!, limit: Int!, search: String!): CarPartsConnection
   getByCategory(category: Int!, page: Int!, limit: Int!): CarPartsConnection
 }

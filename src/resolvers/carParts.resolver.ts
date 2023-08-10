@@ -88,7 +88,6 @@ const resolvers = {
                         where: { Category: args.category }
                     }),
                 ]);
-                console.log(totalDocs)
                 let pageInfo = await pagination(totalDocs, take, page)
                 return {
                     docs,
@@ -97,7 +96,12 @@ const resolvers = {
             } catch (error) {
                 throw new Error(error.message);
             }
+        },
+        getSingleProduct: async (_, args) => {
+            let product = await prisma.carparts.findUnique({ where: { CustomLabel: args.customLabel } })
+            return product
         }
+
     },
     Mutation: {
 

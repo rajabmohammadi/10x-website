@@ -6,7 +6,6 @@ type Mutation {
   checkout: Payment
   paypalCheckout: Payment
 }
-
 type Payment {
   client_secret: String
 }

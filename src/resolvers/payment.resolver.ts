@@ -1,4 +1,5 @@
 import paypal from "@paypal/checkout-server-sdk";
+import calculateAmount from "../utils/calculateAmount";
 const stripe = require('stripe')('sk_test_51NUif2Fonw9wgdCPOVJnfoueYHKg0IB47I6lVDA2e4EYVKgbctlipq6H4zmQA39aQk8M7TiS4FBOqOiL9bls7neQ00hmXTO50A');
 let Environment = process.env.NODE_ENV === 'production' ? paypal.core.LiveEnvironment : paypal.core.SandboxEnvironment
 let client = new paypal.core.PayPalHttpClient(new Environment(process.env.PAYPAL_CLIENT_ID, process.env.PAYPAL_CLIENT_SECRET));
@@ -9,32 +10,37 @@ let storeItems = new Map([
 const resolvers = {
     Query: {},
     Mutation: {
-        payment: async () => {
+        checkout: async (_, args) => {
+            let amount = await calculateAmount(args.items);
+            console.log(amount)
             const paymentIntent = await stripe.paymentIntents.create({
-                amount: 2000,
+                amount: amount,
                 currency: 'usd',
                 automatic_payment_methods: { enabled: true },
             });
+            return {
+                client_secret: paymentIntent.client_secret
+            }
         },
-        checkout: async () => {
-            const session = await stripe.checkout.sessions.create({
-                line_items: [
-                    {
-                        price_data: {
-                            currency: 'usd',
-                            product_data: {
-                                name: 'T-shirt',
-                            },
-                            unit_amount: 2000,
-                        },
-                        quantity: 1,
-                    },
-                ],
-                mode: 'payment',
-                success_url: 'http://localhost:4242/success',
-                cancel_url: 'http://localhost:4242/cancel',
-            });
-        },
+        // checkout: async () => {
+        //     const session = await stripe.checkout.sessions.create({
+        //         line_items: [
+        //             {
+        //                 price_data: {
+        //                     currency: 'usd',
+        //                     product_data: {
+        //                         name: 'T-shirt',
+        //                     },
+        //                     unit_amount: 2000,
+        //                 },
+        //                 quantity: 1,
+        //             },
+        //         ],
+        //         mode: 'payment',
+        //         success_url: 'http://localhost:4242/success',
+        //         cancel_url: 'http://localhost:4242/cancel',
+        //     });
+        // },
         paypalCheckout: async () => {
             const session = await stripe.checkout.sessions.create({
                 line_items: [
